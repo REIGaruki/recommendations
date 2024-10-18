@@ -49,6 +49,6 @@ public class Invest500RuleSet implements RecommendationRuleSet{
     //Сумма пополнений продуктов с типом SAVING больше чем MINIMAL_SAVING_DEPOSIT_AMOUNT ₽.
     private boolean checkRuleThree(UUID userID) {
         //Получаем сумму пополнений продуктов с типом SAVING
-        return transactionsRepository.getSavingDepositTransactionAmount(userID) > MINIMAL_SAVING_DEPOSIT_AMOUNT;
+        return transactionsRepository.getSavingDepositTransactionsAmount(userID) > MINIMAL_SAVING_DEPOSIT_AMOUNT;
     }
 }
