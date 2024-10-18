@@ -17,7 +17,7 @@ public class TransactionsRepository {
 
     public int getCreditTransactionsCount(UUID user) {
         Integer result = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM transactions t JOIN products p WHERE p.type = 'CREDIT' AND t.user_id = ?",
+                "SELECT COUNT(*) FROM transactions t JOIN products p ON t.product_id=p.id WHERE p.type = 'CREDIT' AND t.user_id = ?",
                 Integer.class,
                 user
         );
@@ -26,7 +26,7 @@ public class TransactionsRepository {
 
     public int getInvestTransactionsCount(UUID user) {
         Integer result = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM transactions t JOIN products p WHERE p.type= = 'INVEST' AND t.user_id = ?",
+                "SELECT COUNT(*) FROM transactions t JOIN products p ON t.product_id=p.id WHERE p.type = 'INVEST' AND t.user_id = ?",
                 Integer.class,
                 user
         );
@@ -35,7 +35,7 @@ public class TransactionsRepository {
 
     public int getDebitTransactionsCount(UUID user) {
         Integer result = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM transactions t JOIN products p WHERE p.type = 'DEBIT' AND t.user_id = ?",
+                "SELECT COUNT(*) FROM transactions t JOIN products p ON t.product_id=p.id WHERE p.type = 'DEBIT' AND t.user_id = ?",
                 Integer.class,
                 user
         );

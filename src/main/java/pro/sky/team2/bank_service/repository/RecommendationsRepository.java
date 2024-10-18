@@ -20,11 +20,8 @@ public class RecommendationsRepository {
     }
 
     public Recommendation findById(UUID id) {
-        for (Recommendation recommendation : recommendations) {
-            if (recommendation.getId().equals(id)) {
-                return recommendation;
-            }
-        }
-        return null;
+        return recommendations.stream()
+                .filter(recommendation -> recommendation.getId().equals(id)).findFirst()
+                .orElse(null);
     }
 }

@@ -22,9 +22,9 @@ public class RecommendationController {
 
 
     @GetMapping("{id}")
-    public ResponseEntity<Map<UUID,List<Recommendation>>> getRecomendations(@PathVariable String id) {
+    public ResponseEntity<Map<UUID,List<Recommendation>>> getRecomendations(@PathVariable UUID id) {
         Map<UUID,List<Recommendation>> recommendations = new HashMap<>();
-        recommendations.put(UUID.fromString(id), recommendationService.recommend(UUID.fromString(id)));
+        recommendations.put(id, recommendationService.recommend(id));
         return ResponseEntity.ok(recommendations);
     }
 
