@@ -2,6 +2,7 @@ package pro.sky.team2.bank_service.repository;
 
 import org.springframework.stereotype.Repository;
 import pro.sky.team2.bank_service.model.Recommendation;
+import pro.sky.team2.bank_service.model.Rule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,10 +52,105 @@ public class RecommendationsRepository {
             "\n" +
             "Не упустите возможность воспользоваться выгодными условиями кредитования от нашей компании!";
 
+    private final Rule creditRuleOne = new Rule(
+            "USER_OF",
+            List.of(
+                    "CREDIT"
+            ),
+            true
+    );
+
+    private final Rule creditRuleTwo = new Rule(
+            "TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW",
+            List.of(
+                    "DEBIT",
+                    ">"
+            ),
+            false
+    );
+
+    private final Rule creditRuleThree = new Rule(
+            "TRANSACTION_SUM_COMPARE",
+            List.of(
+                    "DEBIT",
+                    "DEPOSIT",
+                    ">",
+                    "100000"
+            ),
+            false
+    );
+
+    private final Rule investRuleOne = new Rule(
+            "USER_OF",
+            List.of(
+                    "DEBIT"
+            ),
+            false
+    );
+
+    private final Rule investRuleTwo = new Rule(
+            "USER_OF",
+            List.of(
+                    "INVEST"
+            ),
+            true
+    );
+
+    private final Rule investRuleThree = new Rule(
+            "TRANSACTION_SUM_COMPARE",
+            List.of(
+                    "SAVING",
+                    "DEPOSIT",
+                    ">",
+                    "1000"
+            ),
+            false
+    );
+
+    private final Rule savingRuleOne = new Rule(
+            "USER_OF",
+            List.of(
+                    "DEBIT"
+            ),
+            false
+    );
+
+    private final Rule savingRuleTwo = new Rule(
+            "TRANSACTION_SUM_COMPARE",
+            List.of(
+                    "DEBIT",
+                    "DEPOSIT",
+                    ">=",
+                    "50000"
+            ),
+            false
+    );
+
+    private final Rule savingRuleTwoTwo = new Rule(
+            "TRANSACTION_SUM_COMPARE",
+            List.of(
+                    "SAVING",
+                    "DEPOSIT",
+                    ">=",
+                    "50000"
+            ),
+            false
+    );
+
+    private final Rule savingRuleThree = new Rule(
+            "TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW",
+            List.of(
+                    "DEBIT",
+                    ">"
+            ),
+            false
+    );
+
     private final List<Recommendation> recommendations = new ArrayList<>(List.of(
-            new Recommendation("Invest 500", UUID.fromString("147f6a0f-3b91-413b-ab99-87f081d60d5a"), INVEST_500_DESCRIPTION),
-            new Recommendation("Simple credit", UUID.fromString("ab138afb-f3ba-4a93-b74f-0fcee86d447f"), SIMPLE_CREDIT_DESCRIPTION),
-            new Recommendation("Top saving", UUID.fromString("59efc529-2fff-41af-baff-90ccd7402925"), TOP_SAVING_DESCRIPTION)
+            new Recommendation("Invest 500", UUID.fromString("147f6a0f-3b91-413b-ab99-87f081d60d5a"), INVEST_500_DESCRIPTION, List.of(investRuleOne, investRuleTwo, investRuleThree)),
+            new Recommendation("Simple credit", UUID.fromString("ab138afb-f3ba-4a93-b74f-0fcee86d447f"), SIMPLE_CREDIT_DESCRIPTION, List.of(creditRuleOne, creditRuleTwo, creditRuleThree)),
+            new Recommendation("Top saving", UUID.fromString("59efc529-2fff-41af-baff-90ccd7402925"), TOP_SAVING_DESCRIPTION, List.of(savingRuleOne, savingRuleTwo, savingRuleThree)),
+            new Recommendation("Top saving", UUID.fromString("59efc529-2fff-41af-baff-90ccd7402925"), TOP_SAVING_DESCRIPTION, List.of(savingRuleOne, savingRuleTwoTwo, savingRuleThree))
     ));
 
     public RecommendationsRepository() {
@@ -64,5 +160,9 @@ public class RecommendationsRepository {
         return recommendations.stream()
                 .filter(recommendation -> recommendation.getId().equals(id)).findFirst()
                 .orElse(null);
+    }
+
+    public List<Recommendation> getAll() {
+        return recommendations;
     }
 }

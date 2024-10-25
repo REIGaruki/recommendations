@@ -5,10 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import pro.sky.team2.bank_service.model.Recommendation;
 import pro.sky.team2.bank_service.service.RecommendationService;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("recommendation")
@@ -22,8 +19,8 @@ public class RecommendationController {
 
 
     @GetMapping("{id}")
-    public ResponseEntity<Map<UUID,List<Recommendation>>> getRecomendations(@PathVariable UUID id) {
-        Map<UUID,List<Recommendation>> recommendations = new HashMap<>();
+    public ResponseEntity<Map<UUID,Set<Recommendation>>> getRecomendations(@PathVariable UUID id) {
+        Map<UUID, Set<Recommendation>> recommendations = new HashMap<>();
         recommendations.put(id, recommendationService.recommend(id));
         return ResponseEntity.ok(recommendations);
     }

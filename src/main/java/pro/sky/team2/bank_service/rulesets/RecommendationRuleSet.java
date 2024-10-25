@@ -7,5 +7,5 @@ import java.util.UUID;
 
 public interface RecommendationRuleSet {
     //интерфейс получает id пользователя и возвращает объект рекомендации или null
-    Optional<Recommendation> checkRuleMatching(UUID userID);
+    boolean checkRuleMatching(Recommendation recommendation, UUID userID);
 }

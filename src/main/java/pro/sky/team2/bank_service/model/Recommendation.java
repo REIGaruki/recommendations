@@ -2,6 +2,7 @@ package pro.sky.team2.bank_service.model;
 
 import org.springframework.data.annotation.Id;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -14,10 +15,13 @@ public class Recommendation {
 
     private String text;
 
-    public Recommendation(String name, UUID id, String text) {
+    private List<Rule> rules;
+
+    public Recommendation(String name, UUID id, String text, List<Rule> rules) {
         this.name = name;
         this.id = id;
         this.text = text;
+        this.rules = rules;
     }
 
     public String getName() {
@@ -32,13 +36,8 @@ public class Recommendation {
         return text;
     }
 
-    @Override
-    public String toString() {
-        return "Recommendation{" +
-                "name='" + name + '\'' +
-                ", id=" + id +
-                ", text='" + text + '\'' +
-                '}';
+    public List<Rule> getRules() {
+        return rules;
     }
 
     @Override
@@ -46,11 +45,21 @@ public class Recommendation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Recommendation that = (Recommendation) o;
-        return Objects.equals(name, that.name) && Objects.equals(id, that.id) && Objects.equals(text, that.text);
+        return Objects.equals(name, that.name) && Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, id, text);
+        return Objects.hash(name, id);
+    }
+
+    @Override
+    public String toString() {
+        return "Recommendation{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", text='" + text + '\'' +
+                ", rules=" + rules +
+                '}';
     }
 }
