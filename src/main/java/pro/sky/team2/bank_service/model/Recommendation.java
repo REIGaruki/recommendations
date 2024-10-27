@@ -45,12 +45,12 @@ public class Recommendation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Recommendation that = (Recommendation) o;
-        return Objects.equals(name, that.name) && Objects.equals(id, that.id);
+        return Objects.equals(name, that.name) && Objects.equals(text, that.text);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, id);
+        return Objects.hash(name, text);
     }
 
     @Override
