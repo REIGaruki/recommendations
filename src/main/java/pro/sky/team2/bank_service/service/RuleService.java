@@ -2,6 +2,8 @@ package pro.sky.team2.bank_service.service;
 
 import org.springframework.stereotype.Service;
 import pro.sky.team2.bank_service.dto.RecommendationDTO;
+import pro.sky.team2.bank_service.dto.RecommendationListDTO;
+import pro.sky.team2.bank_service.mapper.RecommendationListMapper;
 import pro.sky.team2.bank_service.mapper.RecommendationMapper;
 import pro.sky.team2.bank_service.model.Recommendation;
 import pro.sky.team2.bank_service.model.Rule;
@@ -25,12 +27,9 @@ public class RuleService {
         this.ruleRepository = ruleRepository;
     }
 
-    public List<RecommendationDTO> getAll() {
+    public RecommendationListDTO getAll() {
         List<Recommendation> recommendations = recommendationsRepository.findAll();
-        List<RecommendationDTO> recommendationDTOs = new LinkedList<>();
-        for (Recommendation recommendation : recommendations) {
-            recommendationDTOs.add(RecommendationMapper.mapToDTO(recommendation));
-        }
+        RecommendationListDTO recommendationDTOs = RecommendationListMapper.mapToDTO(recommendations);
         return recommendationDTOs;
     }
 
