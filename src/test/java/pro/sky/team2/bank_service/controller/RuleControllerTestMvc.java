@@ -95,13 +95,11 @@ void postTest() throws Exception {
     Recommendation rec = new Recommendation(RECOMMENDATION_NAME, RECOMMENDATION_TEXT, RULES);
     rec.setProductId(UUID.fromString("147f6a0f-3b91-413b-ab99-87f081d60d5a"));
     RecommendationDTO expected = RecommendationMapper.mapToDTO(rec);
-    rec.setId(UUID.fromString("147f6a0f-3b91-413b-ab99-87f081d60d5a"));
-    Optional<RecommendationDTO> actual = Optional.of(RecommendationMapper.mapToDTO(rec));
-    when(service.createRecommendation(expected)).thenReturn(actual);
-    ResultActions perform = mockMvc.perform(post("/rule")
+    when(service.createRecommendation(RecommendationMapper.mapToDTO(rec))).thenReturn(Optional.of(expected));
+    mockMvc.perform(post("/rule")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(expected)));
-    perform.andExpect(jsonPath("$.id").exists())
+            .content(objectMapper.writeValueAsString(expected)))
+            .andExpect(jsonPath("$.id").exists())
             .andExpect(jsonPath("$.product_name").value(expected.getName()))
             .andExpect(jsonPath("$.product_text").value(expected.getText()))
             .andExpect(jsonPath("$.product_id").value(expected.getProductId().toString()))
