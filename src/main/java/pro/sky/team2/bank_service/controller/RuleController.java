@@ -28,12 +28,8 @@ public class RuleController {
     public ResponseEntity<RecommendationDTO> createRulesOfRecommendation(
             @RequestBody RecommendationDTO recommendationDTO) {
         ResponseEntity<RecommendationDTO> responseEntity;
-        if (service.createRecommendation(recommendationDTO).isPresent()) {
-            Optional<RecommendationDTO> entity = service.createRecommendation(recommendationDTO);
-            responseEntity = ResponseEntity.ok(entity.get());
-        } else {
-           responseEntity = ResponseEntity.badRequest().build();
-        }
+        Optional<RecommendationDTO> entity = service.createRecommendation(recommendationDTO);
+        responseEntity = entity.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
         return responseEntity;
     }
 

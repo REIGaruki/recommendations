@@ -68,4 +68,15 @@ public class RecommendationDTO {
     public void setProductId(UUID productId) {
         this.productId = productId;
     }
+
+    @Override
+    public String toString() {
+        return "RecommendationDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", productId=" + productId +
+                ", text='" + text + '\'' +
+                ", rules=" + rules +
+                '}';
+    }
 }
