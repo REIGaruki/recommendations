@@ -29,7 +29,8 @@ public class RuleController {
             @RequestBody RecommendationDTO recommendationDTO) {
         ResponseEntity<RecommendationDTO> responseEntity;
         if (service.createRecommendation(recommendationDTO).isPresent()) {
-            responseEntity = ResponseEntity.ok(service.createRecommendation(recommendationDTO).get());
+            Optional<RecommendationDTO> entity = service.createRecommendation(recommendationDTO);
+            responseEntity = ResponseEntity.ok(entity.get());
         } else {
            responseEntity = ResponseEntity.badRequest().build();
         }

@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultMatcher;
 import pro.sky.team2.bank_service.dto.RecommendationDTO;
 import pro.sky.team2.bank_service.dto.RecommendationListDTO;
 import pro.sky.team2.bank_service.mapper.RecommendationListMapper;
@@ -19,12 +21,14 @@ import pro.sky.team2.bank_service.service.RuleService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(RuleController.class)
 public class RuleControllerTestMvc {
@@ -73,6 +77,61 @@ public class RuleControllerTestMvc {
                 .andExpect(jsonPath("data[0].rule[0].query").value(expected.get(0).getRules().get(0).getQuery()))
                 .andExpect(jsonPath("data[0].rule[0].arguments[0]").value(expected.get(0).getRules().get(0).getArguments().get(0)))
                 .andExpect(jsonPath("data[0].rule[0].negate").value(expected.get(0).getRules().get(0).isNegate()))
+                .andExpect(jsonPath("data[1].id").exists())
+                .andExpect(jsonPath("data[1].product_name").value(expected.get(1).getName()))
+                .andExpect(jsonPath("data[1].product_text").value(expected.get(1).getText()))
+                .andExpect(jsonPath("data[1].product_id").value(expected.get(1).getProductId().toString()))
+                .andExpect(jsonPath("data[1].rule[0].query").value(expected.get(1).getRules().get(0).getQuery()))
+                .andExpect(jsonPath("data[1].rule[0].arguments[0]").value(expected.get(1).getRules().get(0).getArguments().get(0)))
+                .andExpect(jsonPath("data[1].rule[0].negate").value(expected.get(1).getRules().get(0).isNegate()))
                 .andDo(print());
     }
+
+@Test
+@DisplayName("Should post a recommendation")
+void postTest() throws Exception {
+    Recommendation rec = new Recommendation(RECOMMENDATION_NAME, RECOMMENDATION_TEXT, RULES);
+    rec.setProductId(UUID.fromString("147f6a0f-3b91-413b-ab99-87f081d60d5a"));
+    RecommendationDTO expected = RecommendationMapper.mapToDTO(rec);
+    rec.setId(UUID.fromString("147f6a0f-3b91-413b-ab99-87f081d60d5a"));
+    Optional<RecommendationDTO> actual = Optional.of(RecommendationMapper.mapToDTO(rec));
+    when(service.createRecommendation(expected)).thenReturn(actual);
+    ResultActions perform = mockMvc.perform(post("/rule")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(expected)));
+    perform.andExpect(jsonPath("$.id").exists())
+            .andExpect(jsonPath("$.product_name").value(expected.getName()))
+            .andExpect(jsonPath("$.product_text").value(expected.getText()))
+            .andExpect(jsonPath("$.product_id").value(expected.getProductId().toString()))
+            .andExpect(jsonPath("$.rule[0].query").value(expected.getRules().get(0).getQuery()))
+            .andExpect(jsonPath("$.rule[0].arguments[0]").value(expected.getRules().get(0).getArguments().get(0)))
+            .andExpect(jsonPath("$.rule[0].negate").value(expected.getRules().get(0).isNegate()))
+            .andDo(print());
+}
+
+    @Test
+    @DisplayName("Should response bad request")
+    void postBadTest() throws Exception {
+        Recommendation rec = new Recommendation(RECOMMENDATION_NAME, RECOMMENDATION_TEXT, RULES);
+        rec.setProductId(UUID.fromString("147f6a0f-3b91-413b-ab99-87f081d60d5a"));
+        rec.setId(UUID.fromString("147f6a0f-3b91-413b-ab99-87f081d60d5a"));
+        RecommendationDTO expected = RecommendationMapper.mapToDTO(rec);
+        when(service.createRecommendation(expected)).thenReturn(null);
+        ResultActions perform = mockMvc.perform(post("/rule")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(expected)));
+        perform.andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("Should response no content")
+    void deleteTest() throws Exception {
+        ResultActions perform = mockMvc.perform(delete("/rule/147f6a0f-3b91-413b-ab99-87f081d60d5a")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString("147f6a0f-3b91-413b-ab99-87f081d60d5a")));
+        perform.andExpect(status().isNoContent())
+                .andDo(print());
+    }
+
 }
