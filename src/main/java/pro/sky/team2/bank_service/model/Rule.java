@@ -3,6 +3,7 @@ package pro.sky.team2.bank_service.model;
 import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -12,7 +13,7 @@ public class Rule {
 
     private String query;
 
-    private String arguments;
+    private List<String> arguments;
 
     private boolean negate;
 
@@ -28,11 +29,17 @@ public class Rule {
     public Rule() {
     }
 
+    public Rule(String query, List<String> arguments, boolean negate, Recommendation recommendation) {
+        this.query = query;
+        this.arguments = arguments;
+        this.negate = negate;
+    }
+
     public String getQuery() {
         return query;
     }
 
-    public String getArguments() {
+    public List<String> getArguments() {
         return arguments;
     }
 

@@ -32,7 +32,7 @@ public class RecommendationRuleSetImpl implements RecommendationRuleSet{
     private boolean checkRule(Rule rule, UUID userId) {
         boolean result;
         String query = rule.getQuery();
-        List<String> arguments = new ArrayList<>(List.of(rule.getArguments().split(",")));
+        List<String> arguments = rule.getArguments();
         result = switch (query) {
             case "USER_OF" -> transactionsRepository.checkUserOf(userId, arguments);
             case "ACTIVE_USER_OF" -> transactionsRepository.checkActiveUserOf(userId, arguments);

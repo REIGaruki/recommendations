@@ -30,7 +30,7 @@
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="query" type="text"/>
-            <column name="arguments" type="text"/>
+            <column name="arguments" type="varchar(255) array"/>
             <column name="negate" type="boolean"/>
             <column name="recommendation_id" type="uuid">
                 <constraints foreignKeyName="recommendation_rule_id" references="recommendation(id)" deleteCascade="true"/>
@@ -47,21 +47,21 @@
         <insert tableName="rule">
             <column name="id" value="147f6a0f-3b91-413b-ab99-87f081d60d51"/>
             <column name="query" value="TRANSACTION_SUM_COMPARE"/>
-            <column name="arguments" value="SAVING,DEPOSIT,>,1000"/>
+            <column name="arguments" value="[4]={SAVING,DEPOSIT,>,1000}"/>
             <column name="negate" valueBoolean="false"/>
             <column name="recommendation_id" value="147f6a0f-3b91-413b-ab99-87f081d60d5a"/>
         </insert>
         <insert tableName="rule">
             <column name="id" value="147f6a0f-3b91-413b-ab99-87f081d60d52"/>
             <column name="query" value="USER_OF"/>
-            <column name="arguments" value="DEBIT"/>
+            <column name="arguments" value="[1]={DEBIT}"/>
             <column name="negate" valueBoolean="false"/>
             <column name="recommendation_id" value="147f6a0f-3b91-413b-ab99-87f081d60d5a"/>
         </insert>
         <insert tableName="rule">
             <column name="id" value="147f6a0f-3b91-413b-ab99-87f081d60d53"/>
             <column name="query" value="USER_OF"/>
-            <column name="arguments" value="INVEST"/>
+            <column name="arguments" value="[1]={INVEST}"/>
             <column name="negate" valueBoolean="true"/>
             <column name="recommendation_id" value="147f6a0f-3b91-413b-ab99-87f081d60d5a"/>
         </insert>
@@ -73,21 +73,21 @@
         <insert tableName="rule">
             <column name="id" value="ab138afb-f3ba-4a93-b74f-0fcee86d4471"/>
             <column name="query" value="TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW"/>
-            <column name="arguments" value="DEBIT,>"/>
+            <column name="arguments" value="[2]={DEBIT,>}"/>
             <column name="negate" valueBoolean="false"/>
             <column name="recommendation_id" value="ab138afb-f3ba-4a93-b74f-0fcee86d447f"/>
         </insert>
         <insert tableName="rule">
             <column name="id" value="ab138afb-f3ba-4a93-b74f-0fcee86d4472"/>
             <column name="query" value="USER_OF"/>
-            <column name="arguments" value="CREDIT"/>
+            <column name="arguments" value="[1]={CREDIT}"/>
             <column name="negate" valueBoolean="true"/>
             <column name="recommendation_id" value="ab138afb-f3ba-4a93-b74f-0fcee86d447f"/>
         </insert>
         <insert tableName="rule">
             <column name="id" value="ab138afb-f3ba-4a93-b74f-0fcee86d4473"/>
             <column name="query" value="TRANSACTION_SUM_COMPARE"/>
-            <column name="arguments" value="DEBIT,DEPOSIT,>,100000"/>
+            <column name="arguments" value="[4]={DEBIT,DEPOSIT,>,100000}"/>
             <column name="negate" valueBoolean="false"/>
             <column name="recommendation_id" value="ab138afb-f3ba-4a93-b74f-0fcee86d447f"/>
         </insert>
@@ -99,21 +99,21 @@
         <insert tableName="rule">
             <column name="id" value="59efc529-2fff-41af-baff-90ccd7402921"/>
             <column name="query" value="USER_OF"/>
-            <column name="arguments" value="DEBIT,>"/>
+            <column name="arguments" value="[2]={DEBIT,>}"/>
             <column name="negate" valueBoolean="false"/>
             <column name="recommendation_id" value="59efc529-2fff-41af-baff-90ccd7402925"/>
         </insert>
         <insert tableName="rule">
             <column name="id" value="59efc529-2fff-41af-baff-90ccd7402922"/>
             <column name="query" value="TRANSACTION_SUM_COMPARE"/>
-            <column name="arguments" value="DEBIT,DEPOSIT,>=,50000"/>
+            <column name="arguments" value="[4]={DEBIT,DEPOSIT,>=,50000}"/>
             <column name="negate" valueBoolean="false"/>
             <column name="recommendation_id" value="59efc529-2fff-41af-baff-90ccd7402925"/>
         </insert>
         <insert tableName="rule">
             <column name="id" value="59efc529-2fff-41af-baff-90ccd7402923"/>
             <column name="query" value="TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW"/>
-            <column name="arguments" value="DEBIT,>"/>
+            <column name="arguments" value="[2]={DEBIT,>}"/>
             <column name="negate" valueBoolean="false"/>
             <column name="recommendation_id" value="59efc529-2fff-41af-baff-90ccd7402925"/>
         </insert>
@@ -125,21 +125,21 @@
         <insert tableName="rule">
             <column name="id" value="59efc529-2fff-41af-baff-90ccd7402927"/>
             <column name="query" value="USER_OF"/>
-            <column name="arguments" value="DEBIT,>"/>
+            <column name="arguments" value="[2]={DEBIT,>}"/>
             <column name="negate" valueBoolean="false"/>
             <column name="recommendation_id" value="59efc529-2fff-41af-baff-90ccd7402926"/>
         </insert>
         <insert tableName="rule">
             <column name="id" value="59efc529-2fff-41af-baff-90ccd7402928"/>
             <column name="query" value="TRANSACTION_SUM_COMPARE"/>
-            <column name="arguments" value="SAVING,DEPOSIT,>=,50000"/>
+            <column name="arguments" value="[4]={SAVING,DEPOSIT,>=,50000}"/>
             <column name="negate" valueBoolean="false"/>
             <column name="recommendation_id" value="59efc529-2fff-41af-baff-90ccd7402926"/>
         </insert>
         <insert tableName="rule">
             <column name="id" value="59efc529-2fff-41af-baff-90ccd7402929"/>
             <column name="query" value="TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW"/>
-            <column name="arguments" value="DEBIT,>"/>
+            <column name="arguments" value="[2]={DEBIT,>}"/>
             <column name="negate" valueBoolean="false"/>
             <column name="recommendation_id" value="59efc529-2fff-41af-baff-90ccd7402926"/>
         </insert>

@@ -28,6 +28,12 @@ public class Recommendation {
     public Recommendation() {
     }
 
+    public Recommendation(String name, String text, List<Rule> rules) {
+        this.name = name;
+        this.text = text;
+        this.rules = rules;
+    }
+
     public String getName() {
         return name;
     }
