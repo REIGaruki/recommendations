@@ -2,7 +2,7 @@ package pro.sky.team2.bank_service.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pro.sky.team2.bank_service.model.Recommendation;
+import pro.sky.team2.bank_service.dto.RecommendationDTO;
 import pro.sky.team2.bank_service.service.RuleService;
 
 import java.util.*;
@@ -18,35 +18,23 @@ public class RuleController {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, List<Map<String, Object>>>> getRules() {
-        List<Recommendation> recommendations = service.getAll();
-        Map<String, List<Map<String, Object>>> response = new HashMap<>();
-        List<Map<String, Object>> data = new ArrayList<>();
-        for (Recommendation recommendation : recommendations) {
-            Map<String, Object> ruleSet = new HashMap<>();
-            ruleSet.put("id", UUID.randomUUID());
-            ruleSet.put("product_name", recommendation.getName());
-            ruleSet.put("product_id", recommendation.getId());
-            ruleSet.put("product_text", recommendation.getText());
-            ruleSet.put("rule", recommendation.getRules());
-            data.add(ruleSet);
-        }
+    public ResponseEntity<Map<String, List<RecommendationDTO>>> getRules() {
+        List<RecommendationDTO> data = service.getAll();
+        Map<String, List<RecommendationDTO>> response = new HashMap<>();
         response.put("data", data);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> createRulesOfRecommendation(
-            @RequestBody Recommendation recommendation
-    ) {
-        service.createRecommendation(recommendation.getName(), recommendation.getText(), recommendation.getRules());
-        Map<String, Object> response = new HashMap<>();
-        response.put("id", UUID.randomUUID());
-        response.put("product_name", recommendation.getName());
-        response.put("product_id", recommendation.getId());
-        response.put("product_text", recommendation.getText());
-        response.put("rule", recommendation.getRules());
-        return ResponseEntity.ok(response);
+    public ResponseEntity<RecommendationDTO> createRulesOfRecommendation(
+            @RequestBody RecommendationDTO recommendationDTO) {
+        ResponseEntity<RecommendationDTO> responseEntity;
+        if (service.createRecommendation(recommendationDTO).isPresent()) {
+            responseEntity = ResponseEntity.ok(service.createRecommendation(recommendationDTO).get());
+        } else {
+           responseEntity = ResponseEntity.badRequest().build();
+        }
+        return responseEntity;
     }
 
     @DeleteMapping("/{recommendationId}")

@@ -1,5 +1,6 @@
 package pro.sky.team2.bank_service.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -18,6 +19,16 @@ public class Recommendation {
     @GeneratedValue
     @UuidGenerator
     private UUID id;
+
+    private UUID productId;
+
+    public UUID getProductId() {
+        return productId;
+    }
+
+    public void setProductId(UUID productId) {
+        this.productId = productId;
+    }
 
     private String text;
 
@@ -47,6 +58,22 @@ public class Recommendation {
 
     public List<Rule> getRules() {
         return rules;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setRules(List<Rule> rules) {
+        this.rules = rules;
     }
 
     @Override

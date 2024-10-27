@@ -47,7 +47,11 @@ public class TransactionsRepository {
 
     public boolean checkTransactionSumCompareDepositWithdraw(UUID userId, List<String> arguments) {
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(
-                "SELECT CAST (CASE WHEN (SELECT SUM(amount) FROM transactions t JOIN products p ON t.product_id=p.id WHERE p.type = ? AND t.type = 'DEPOSIT' AND t.user_id = ?) " + arguments.get(1) + "(SELECT SUM(amount) FROM transactions t JOIN products p ON t.product_id=p.id WHERE p.type = ? AND t.type = 'WITHDRAW' AND t.user_id = ?) THEN 1 ELSE 0 END AS BIT)",
+                "SELECT CAST (CASE WHEN (SELECT SUM(amount) FROM transactions t " +
+                        "JOIN products p ON t.product_id=p.id WHERE p.type = ? AND t.type = 'DEPOSIT' " +
+                        "AND t.user_id = ?) " + arguments.get(1) + "(SELECT SUM(amount) FROM transactions" +
+                        " t JOIN products p ON t.product_id=p.id WHERE p.type = ? AND t.type = " +
+                        "'WITHDRAW' AND t.user_id = ?) THEN 1 ELSE 0 END AS BIT)",
                 boolean.class,
                 arguments.get(0),
                 userId,

@@ -1,12 +1,16 @@
 package pro.sky.team2.bank_service.service;
 
 import org.springframework.stereotype.Service;
+import pro.sky.team2.bank_service.dto.RecommendationDTO;
+import pro.sky.team2.bank_service.mapper.RecommendationMapper;
 import pro.sky.team2.bank_service.model.Recommendation;
 import pro.sky.team2.bank_service.model.Rule;
 import pro.sky.team2.bank_service.repository.RecommendationsRepository;
 import pro.sky.team2.bank_service.repository.RulesRepository;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -21,21 +25,30 @@ public class RuleService {
         this.ruleRepository = ruleRepository;
     }
 
-    public List<Recommendation> getAll() {
-        return recommendationsRepository.findAll();
+    public List<RecommendationDTO> getAll() {
+        List<Recommendation> recommendations = recommendationsRepository.findAll();
+        List<RecommendationDTO> recommendationDTOs = new LinkedList<>();
+        for (Recommendation recommendation : recommendations) {
+            recommendationDTOs.add(RecommendationMapper.mapToDTO(recommendation));
+        }
+        return recommendationDTOs;
     }
 
-    public Recommendation createRecommendation(String name, String text, List<Rule> rules) {
-        Recommendation recommendation = new Recommendation(name, text, rules);
-        recommendationsRepository.save(recommendation);
+    public Optional<RecommendationDTO> createRecommendation(RecommendationDTO recommendationDTO) {
+        Recommendation recommendation = RecommendationMapper.mapFromDTO(recommendationDTO);
+        List<Rule> rules = recommendation.getRules();
+        recommendation= recommendationsRepository.save(recommendation);
         for (Rule rule : rules){
             rule.setRecommendation(recommendation);
             ruleRepository.save(rule);
         }
-        return recommendation;
+        recommendation.setRules(rules);
+        return Optional.of(RecommendationMapper.mapToDTO(recommendation));
     }
 
     public void deleteRecommendation(UUID recommendationId) {
         recommendationsRepository.deleteById(recommendationId);
     }
+
+
 }
