@@ -3,12 +3,9 @@ package pro.sky.team2.bank_service.rulesets;
 import org.springframework.stereotype.Component;
 import pro.sky.team2.bank_service.model.Recommendation;
 import pro.sky.team2.bank_service.model.Rule;
-import pro.sky.team2.bank_service.repository.RecommendationsRepository;
 import pro.sky.team2.bank_service.repository.TransactionsRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Component

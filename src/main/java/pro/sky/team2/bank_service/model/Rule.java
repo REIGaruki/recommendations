@@ -1,5 +1,6 @@
 package pro.sky.team2.bank_service.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -26,10 +27,15 @@ public class Rule {
     @JoinColumn(name = "recommendation_id")
     private Recommendation recommendation;
 
+    @JsonIgnore
+    public void setRecommendation(Recommendation recommendation) {
+        this.recommendation = recommendation;
+    }
+
     public Rule() {
     }
 
-    public Rule(String query, List<String> arguments, boolean negate, Recommendation recommendation) {
+    public Rule(String query, List<String> arguments, boolean negate) {
         this.query = query;
         this.arguments = arguments;
         this.negate = negate;
@@ -52,11 +58,20 @@ public class Rule {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Rule rule = (Rule) o;
-        return negate == rule.negate && Objects.equals(query, rule.query) && Objects.equals(arguments, rule.arguments);
+        return negate == rule.negate && Objects.equals(query, rule.query) && Objects.equals(arguments, rule.arguments) && Objects.equals(id, rule.id) && Objects.equals(recommendation, rule.recommendation);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(query, arguments, negate);
+        return Objects.hash(query, arguments, negate, id, recommendation);
+    }
+
+    @Override
+    public String toString() {
+        return "Rule{" +
+                "query='" + query + '\'' +
+                ", arguments=" + arguments +
+                ", negate=" + negate +
+                '}';
     }
 }

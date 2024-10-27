@@ -3,7 +3,6 @@ package pro.sky.team2.bank_service.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.team2.bank_service.model.Recommendation;
-import pro.sky.team2.bank_service.model.Rule;
 import pro.sky.team2.bank_service.service.RuleService;
 
 import java.util.*;
@@ -38,12 +37,9 @@ public class RuleController {
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> createRulesOfRecommendation(
-            @RequestParam(name = "product_name") String name,
-            @RequestParam(name = "product_id") UUID id,
-            @RequestParam(name = "product_text") String text,
-            @RequestParam(name = "rule") List<Rule> rules
+            @RequestBody Recommendation recommendation
     ) {
-        Recommendation recommendation = service.createRecommendation(name, text, rules);
+        service.createRecommendation(recommendation.getName(), recommendation.getText(), recommendation.getRules());
         Map<String, Object> response = new HashMap<>();
         response.put("id", UUID.randomUUID());
         response.put("product_name", recommendation.getName());
