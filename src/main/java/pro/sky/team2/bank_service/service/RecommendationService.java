@@ -24,10 +24,9 @@ public class RecommendationService {
     }
 
     public Set<Recommendation> recommend(UUID userID) {
-        List<Recommendation> recommendations = recommendationsRepository.getAll();
-        Set<Recommendation> recommendForUser = recommendations.stream()
+        List<Recommendation> recommendations = recommendationsRepository.findAll();
+        return recommendations.stream()
                 .filter(recommendation -> ruleSet.checkRuleMatching(recommendation, userID))
                 .collect(Collectors.toCollection(HashSet::new));
-        return recommendForUser;
     }
 }

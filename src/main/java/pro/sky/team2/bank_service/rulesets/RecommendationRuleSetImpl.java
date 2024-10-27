@@ -6,6 +6,7 @@ import pro.sky.team2.bank_service.model.Rule;
 import pro.sky.team2.bank_service.repository.RecommendationsRepository;
 import pro.sky.team2.bank_service.repository.TransactionsRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,7 +32,7 @@ public class RecommendationRuleSetImpl implements RecommendationRuleSet{
     private boolean checkRule(Rule rule, UUID userId) {
         boolean result;
         String query = rule.getQuery();
-        List<String> arguments = rule.getArguments();
+        List<String> arguments = new ArrayList<>(List.of(rule.getArguments().split(",")));
         result = switch (query) {
             case "USER_OF" -> transactionsRepository.checkUserOf(userId, arguments);
             case "ACTIVE_USER_OF" -> transactionsRepository.checkActiveUserOf(userId, arguments);

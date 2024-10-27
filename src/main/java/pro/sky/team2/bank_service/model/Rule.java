@@ -1,25 +1,29 @@
 package pro.sky.team2.bank_service.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
+@Entity
+@Table(name = "rule")
 public class Rule {
 
     private String query;
 
-    private List<String> arguments;
+    private String arguments;
 
     private boolean negate;
 
-    public Rule(String query, List<String> arguments, boolean negate) {
-        this.query = query;
-        this.arguments = arguments;
-        this.negate = negate;
-    }
+    @Id
+    @GeneratedValue
+    @UuidGenerator
+    private UUID id;
+
+    @ManyToOne
+    @JoinColumn(name = "recommendation_id")
+    private Recommendation recommendation;
 
     public Rule() {
     }
@@ -28,7 +32,7 @@ public class Rule {
         return query;
     }
 
-    public List<String> getArguments() {
+    public String getArguments() {
         return arguments;
     }
 

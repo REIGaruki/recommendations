@@ -1,27 +1,31 @@
 package pro.sky.team2.bank_service.model;
 
-import org.springframework.data.annotation.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
+
 
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+@Entity
+@Table(name = "recommendation")
 public class Recommendation {
 
     private String name;
 
     @Id
+    @GeneratedValue
+    @UuidGenerator
     private UUID id;
 
     private String text;
 
+    @OneToMany(mappedBy = "recommendation")
     private List<Rule> rules;
 
-    public Recommendation(String name, UUID id, String text, List<Rule> rules) {
-        this.name = name;
-        this.id = id;
-        this.text = text;
-        this.rules = rules;
+    public Recommendation() {
     }
 
     public String getName() {
@@ -36,6 +40,7 @@ public class Recommendation {
         return text;
     }
 
+    @JsonIgnore
     public List<Rule> getRules() {
         return rules;
     }
