@@ -7,10 +7,10 @@ import pro.sky.team2.bank_service.mapper.RecommendationListMapper;
 import pro.sky.team2.bank_service.mapper.RecommendationMapper;
 import pro.sky.team2.bank_service.model.Recommendation;
 import pro.sky.team2.bank_service.model.Rule;
+import pro.sky.team2.bank_service.repository.ArgumentsRepository;
 import pro.sky.team2.bank_service.repository.RecommendationsRepository;
 import pro.sky.team2.bank_service.repository.RulesRepository;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,9 +22,12 @@ public class RuleService {
 
     private final RulesRepository ruleRepository;
 
-    public RuleService(RecommendationsRepository recommendationsRepository, RulesRepository ruleRepository) {
+    private final ArgumentsRepository argumentsRepository;
+
+    public RuleService(RecommendationsRepository recommendationsRepository, RulesRepository ruleRepository, ArgumentsRepository argumentsRepository) {
         this.recommendationsRepository = recommendationsRepository;
         this.ruleRepository = ruleRepository;
+        this.argumentsRepository = argumentsRepository;
     }
 
     public RecommendationListDTO getAll() {
@@ -35,18 +38,50 @@ public class RuleService {
 
     public Optional<RecommendationDTO> createRecommendation(RecommendationDTO recommendationDTO) {
         Recommendation recommendation = RecommendationMapper.mapFromDTO(recommendationDTO);
+        Optional<RecommendationDTO> result;
         List<Rule> rules = recommendation.getRules();
-        recommendation= recommendationsRepository.save(recommendation);
-        for (Rule rule : rules){
-            rule.setRecommendation(recommendation);
-            ruleRepository.save(rule);
+        boolean allIsOk = true;
+        for (Rule rule : rules) {
+            allIsOk = allIsOk && checkQuery(rule);
         }
-        recommendation.setRules(rules);
-        return Optional.of(RecommendationMapper.mapToDTO(recommendation));
+        if (allIsOk) {
+            recommendation = recommendationsRepository.save(recommendation);
+            for (Rule rule : rules) {
+                rule.setRecommendation(recommendation);
+                ruleRepository.save(rule);
+            }
+            recommendation.setRules(rules);
+            result = Optional.of(RecommendationMapper.mapToDTO(recommendation));
+        } else {
+            result = Optional.empty();
+        }
+        return result;
     }
 
     public void deleteRecommendation(UUID recommendationId) {
         recommendationsRepository.deleteById(recommendationId);
+    }
+
+    private boolean checkQuery(Rule rule) {
+        String query = rule.getQuery();
+        if (!argumentsRepository.QUERIES.contains(query)) {
+            return false;
+        } else if (!argumentsRepository.PRODUCT_TYPES.contains(rule.getArguments().get(0))) {
+            return false;
+        } else if (query.equals("TRANSACTION_SUM_COMPARE")) {
+            if (!argumentsRepository.TRANSACTION_TYPES.contains(rule.getArguments().get(1))) {
+                return false;
+            } else if (!argumentsRepository.RELATION_OPERATORS.contains(rule.getArguments().get(2))) {
+                return false;
+            } else if (Integer.parseInt(rule.getArguments().get(3)) < 0) {
+                return false;
+            }
+        } else if (query.equals("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW")) {
+            if (!argumentsRepository.RELATION_OPERATORS.contains(rule.getArguments().get(1))) {
+                return false;
+            }
+        }
+        return true;
     }
 
 

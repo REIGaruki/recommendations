@@ -27,10 +27,11 @@ public class RuleController {
     @PostMapping
     public ResponseEntity<RecommendationDTO> createRulesOfRecommendation(
             @RequestBody RecommendationDTO recommendationDTO) {
-        ResponseEntity<RecommendationDTO> responseEntity;
-        Optional<RecommendationDTO> entity = service.createRecommendation(recommendationDTO);
-        responseEntity = entity.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
-        return responseEntity;
+        if (service.createRecommendation(recommendationDTO).isPresent()) {
+            return ResponseEntity.ok(service.createRecommendation(recommendationDTO).get());
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/{recommendationId}")
