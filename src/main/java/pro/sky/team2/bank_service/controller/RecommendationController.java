@@ -19,7 +19,7 @@ public class RecommendationController {
 
 
     @GetMapping("{user_id}")
-    public ResponseEntity<Map<UUID,Set<Recommendation>>> getRecomendations(@PathVariable UUID userId) {
+    public ResponseEntity<Map<UUID,Set<Recommendation>>> getRecomendations(@PathVariable("user_id") UUID userId) {
         Map<UUID, Set<Recommendation>> recommendations = new HashMap<>();
         recommendations.put(userId, recommendationService.recommend(userId));
         return ResponseEntity.ok(recommendations);

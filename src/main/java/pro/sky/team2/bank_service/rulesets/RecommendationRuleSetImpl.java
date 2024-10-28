@@ -1,5 +1,8 @@
 package pro.sky.team2.bank_service.rulesets;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import pro.sky.team2.bank_service.model.Recommendation;
 import pro.sky.team2.bank_service.model.Rule;
@@ -13,10 +16,14 @@ public class RecommendationRuleSetImpl implements RecommendationRuleSet{
 
     private final TransactionsRepository transactionsRepository;
 
+    @Autowired
+    CacheManager cacheManager;
+
     public RecommendationRuleSetImpl(TransactionsRepository transactionsRepository) {
         this.transactionsRepository = transactionsRepository;
     }
 
+    @Cacheable(value = "check_rule",  key = "{#userId, #recommendation.id}")
     public boolean checkRuleMatching(Recommendation recommendation, UUID userId) {
         boolean result = true;
             List<Rule> rules = recommendation.getRules();
@@ -26,13 +33,17 @@ public class RecommendationRuleSetImpl implements RecommendationRuleSet{
         return result;
     }
 
+    @Cacheable(value = "check_rule",  key = "{#userId, #recommendation.id}")
     private boolean checkRule(Rule rule, UUID userId) {
+        if (cacheManager.getCache("check_rule").get("{#userId, #recommendation.id}") != null) {
+            return Boolean.TRUE.equals(cacheManager.getCache("check_rule").get("{#userId, #recommendation.id}"));
+        }
         boolean result;
         String query = rule.getQuery();
         List<String> arguments = rule.getArguments();
         result = switch (query) {
-            case "USER_OF" -> transactionsRepository.checkUserOf(userId, arguments);
-            case "ACTIVE_USER_OF" -> transactionsRepository.checkActiveUserOf(userId, arguments);
+            case "USER_OF" -> transactionsRepository.checkUserOf(userId, arguments, 0);
+            case "ACTIVE_USER_OF" -> transactionsRepository.checkUserOf(userId, arguments, 5);
             case "TRANSACTION_SUM_COMPARE" -> transactionsRepository.checkTransactionSumCompare(userId, arguments);
             case "TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW" ->
                     transactionsRepository.checkTransactionSumCompareDepositWithdraw(userId, arguments);
