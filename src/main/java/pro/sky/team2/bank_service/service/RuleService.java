@@ -64,20 +64,20 @@ public class RuleService {
 
     private boolean checkQuery(Rule rule) {
         String query = rule.getQuery();
-        if (!argumentsRepository.QUERIES.contains(query)) {
+        if (!List.of(ArgumentsRepository.QUERIES).contains(query)) {
             return false;
-        } else if (!argumentsRepository.PRODUCT_TYPES.contains(rule.getArguments().get(0))) {
+        } else if (!List.of(ArgumentsRepository.PRODUCT_TYPES).contains(rule.getArguments().get(0))) {
             return false;
         } else if (query.equals("TRANSACTION_SUM_COMPARE")) {
-            if (!argumentsRepository.TRANSACTION_TYPES.contains(rule.getArguments().get(1))) {
+            if (!List.of(ArgumentsRepository.TRANSACTION_TYPES).contains(rule.getArguments().get(1))) {
                 return false;
-            } else if (!argumentsRepository.RELATION_OPERATORS.contains(rule.getArguments().get(2))) {
+            } else if (!List.of(ArgumentsRepository.RELATION_OPERATORS).contains(rule.getArguments().get(2))) {
                 return false;
             } else if (Integer.parseInt(rule.getArguments().get(3)) < 0) {
                 return false;
             }
         } else if (query.equals("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW")) {
-            if (!argumentsRepository.RELATION_OPERATORS.contains(rule.getArguments().get(1))) {
+            if (!List.of(ArgumentsRepository.RELATION_OPERATORS).contains(rule.getArguments().get(1))) {
                 return false;
             }
         }
