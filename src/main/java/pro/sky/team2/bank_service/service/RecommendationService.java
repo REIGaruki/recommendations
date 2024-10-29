@@ -33,9 +33,9 @@ public class RecommendationService {
             if (ruleSet.checkRuleMatching(recommendation, userID)) {
                 Optional<RecommendationStat> stat = statsRepository.findById(recommendation.getId());
                 if (stat.isPresent()) {
-                    RecommendationStat iStat = stat.get();
-                    iStat.setCounter(iStat.getCounter() + 1);
-                    statsRepository.save(iStat);
+                    RecommendationStat newStat = stat.get();
+                    newStat.setCounter(newStat.getCounter() + 1);
+                    statsRepository.save(newStat);
                 }
                 recommendationForUserDTOS.add(RecommendationMapper.mapToUserDTO(recommendation));
             }
