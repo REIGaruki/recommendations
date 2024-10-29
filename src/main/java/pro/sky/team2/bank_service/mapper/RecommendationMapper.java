@@ -1,9 +1,18 @@
 package pro.sky.team2.bank_service.mapper;
 
 import pro.sky.team2.bank_service.dto.RecommendationDTO;
+import pro.sky.team2.bank_service.dto.RecommendationForUserDTO;
 import pro.sky.team2.bank_service.model.Recommendation;
 
 public class RecommendationMapper {
+
+    public static RecommendationForUserDTO mapToUserDTO(Recommendation recommendation) {
+        RecommendationForUserDTO recommendationForUserDTO = new RecommendationForUserDTO();
+        recommendationForUserDTO.setProductId(recommendation.getProductId());
+        recommendationForUserDTO.setName(recommendation.getName());
+        recommendationForUserDTO.setText(recommendation.getText());
+        return recommendationForUserDTO;
+    }
 
     public static RecommendationDTO mapToDTO(Recommendation recommendation) {
         RecommendationDTO recommendationDTO = new RecommendationDTO();

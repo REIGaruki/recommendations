@@ -3,6 +3,7 @@ package pro.sky.team2.bank_service.service;
 import org.springframework.stereotype.Service;
 import pro.sky.team2.bank_service.dto.RecommendationDTO;
 import pro.sky.team2.bank_service.dto.RecommendationListDTO;
+import pro.sky.team2.bank_service.exception.WrongArgumentException;
 import pro.sky.team2.bank_service.mapper.RecommendationListMapper;
 import pro.sky.team2.bank_service.mapper.RecommendationMapper;
 import pro.sky.team2.bank_service.model.Recommendation;
@@ -22,12 +23,9 @@ public class RuleService {
 
     private final RulesRepository ruleRepository;
 
-    private final ArgumentsRepository argumentsRepository;
-
     public RuleService(RecommendationsRepository recommendationsRepository, RulesRepository ruleRepository, ArgumentsRepository argumentsRepository) {
         this.recommendationsRepository = recommendationsRepository;
         this.ruleRepository = ruleRepository;
-        this.argumentsRepository = argumentsRepository;
     }
 
     public RecommendationListDTO getAll() {
@@ -58,27 +56,33 @@ public class RuleService {
     }
 
     public void deleteRecommendation(UUID recommendationId) {
+        if (recommendationsRepository.findById(recommendationId).isPresent()) {
         recommendationsRepository.deleteById(recommendationId);
+        }
     }
 
-    private boolean checkQuery(Rule rule) {
-        String query = rule.getQuery();
-        if (!List.of(ArgumentsRepository.QUERIES).contains(query)) {
-            return false;
-        } else if (!List.of(ArgumentsRepository.PRODUCT_TYPES).contains(rule.getArguments().get(0))) {
-            return false;
-        } else if (query.equals("TRANSACTION_SUM_COMPARE")) {
-            if (!List.of(ArgumentsRepository.TRANSACTION_TYPES).contains(rule.getArguments().get(1))) {
-                return false;
-            } else if (!List.of(ArgumentsRepository.RELATION_OPERATORS).contains(rule.getArguments().get(2))) {
-                return false;
-            } else if (Integer.parseInt(rule.getArguments().get(3)) < 0) {
-                return false;
+    private boolean checkQuery(Rule rule) throws NumberFormatException{
+        try {
+            String query = rule.getQuery();
+            if (!List.of(ArgumentsRepository.QUERIES).contains(query)) {
+                throw new WrongArgumentException("Wrong query");
+            } else if (!List.of(ArgumentsRepository.PRODUCT_TYPES).contains(rule.getArguments().get(0))) {
+                throw new WrongArgumentException("Wrong product type");
+            } else if (query.equals("TRANSACTION_SUM_COMPARE")) {
+                if (!List.of(ArgumentsRepository.TRANSACTION_TYPES).contains(rule.getArguments().get(1))) {
+                    throw new WrongArgumentException("Wrong transaction");
+                } else if (!List.of(ArgumentsRepository.RELATION_OPERATORS).contains(rule.getArguments().get(2))) {
+                    throw new WrongArgumentException("Wrong operator");
+                } else if (Integer.parseInt(rule.getArguments().get(3)) < 0) {
+                    throw new WrongArgumentException("Wrong number");
+                }
+            } else if (query.equals("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW")) {
+                if (!List.of(ArgumentsRepository.RELATION_OPERATORS).contains(rule.getArguments().get(1))) {
+                    throw new WrongArgumentException("Wrong operator");
+                }
             }
-        } else if (query.equals("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW")) {
-            if (!List.of(ArgumentsRepository.RELATION_OPERATORS).contains(rule.getArguments().get(1))) {
-                return false;
-            }
+        } catch (NumberFormatException | WrongArgumentException numberFormatException) {
+            return false;
         }
         return true;
     }

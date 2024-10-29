@@ -27,8 +27,9 @@ public class RuleController {
     @PostMapping
     public ResponseEntity<RecommendationDTO> createRulesOfRecommendation(
             @RequestBody RecommendationDTO recommendationDTO) {
-        if (service.createRecommendation(recommendationDTO).isPresent()) {
-            return ResponseEntity.ok(service.createRecommendation(recommendationDTO).get());
+        RecommendationDTO response = service.createRecommendation(recommendationDTO).orElse(null);
+        if (response != null) {
+            return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.badRequest().build();
         }

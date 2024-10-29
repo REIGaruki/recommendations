@@ -1,6 +1,8 @@
 package pro.sky.team2.bank_service.service;
 
 import org.springframework.stereotype.Service;
+import pro.sky.team2.bank_service.dto.RecommendationForUserDTO;
+import pro.sky.team2.bank_service.mapper.RecommendationMapper;
 import pro.sky.team2.bank_service.model.Recommendation;
 import pro.sky.team2.bank_service.repository.RecommendationsRepository;
 import pro.sky.team2.bank_service.rulesets.RecommendationRuleSet;
@@ -23,10 +25,11 @@ public class RecommendationService {
         this.ruleSet = ruleSet;
     }
 
-    public Set<Recommendation> recommend(UUID userID) {
+    public Set<RecommendationForUserDTO> recommend(UUID userID) {
         List<Recommendation> recommendations = recommendationsRepository.findAll();
-        return recommendations.stream()
+        HashSet<RecommendationForUserDTO> result = recommendations.stream()
                 .filter(recommendation -> ruleSet.checkRuleMatching(recommendation, userID))
-                .collect(Collectors.toCollection(HashSet::new));
+                .map(RecommendationMapper::mapToUserDTO).collect(Collectors.toCollection(HashSet::new));
+        return result;
     }
 }
