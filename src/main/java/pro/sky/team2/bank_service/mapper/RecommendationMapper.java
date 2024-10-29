@@ -2,7 +2,9 @@ package pro.sky.team2.bank_service.mapper;
 
 import pro.sky.team2.bank_service.dto.RecommendationDTO;
 import pro.sky.team2.bank_service.dto.RecommendationForUserDTO;
+import pro.sky.team2.bank_service.dto.RecommendationStatsDTO;
 import pro.sky.team2.bank_service.model.Recommendation;
+import pro.sky.team2.bank_service.model.RecommendationStat;
 
 public class RecommendationMapper {
 
@@ -32,5 +34,12 @@ public class RecommendationMapper {
         recommendation.setRules(recommendationDTO.getRules());
         recommendation.setProductId(recommendationDTO.getProductId());
         return recommendation;
+    }
+
+    public static RecommendationStatsDTO mapToStatsDTO(RecommendationStat stat) {
+        RecommendationStatsDTO dto = new RecommendationStatsDTO();
+        dto.setProductId(stat.getRecommendation().getProductId());
+        dto.setCounter(stat.getCounter());
+        return dto;
     }
 }

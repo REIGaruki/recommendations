@@ -3,6 +3,7 @@ package pro.sky.team2.bank_service.service;
 import org.springframework.stereotype.Service;
 import pro.sky.team2.bank_service.dto.RecommendationDTO;
 import pro.sky.team2.bank_service.dto.RecommendationListDTO;
+import pro.sky.team2.bank_service.dto.RecommendationStatsDTO;
 import pro.sky.team2.bank_service.exception.WrongArgumentException;
 import pro.sky.team2.bank_service.mapper.RecommendationListMapper;
 import pro.sky.team2.bank_service.mapper.RecommendationMapper;
@@ -11,10 +12,13 @@ import pro.sky.team2.bank_service.model.Rule;
 import pro.sky.team2.bank_service.repository.ArgumentsRepository;
 import pro.sky.team2.bank_service.repository.RecommendationsRepository;
 import pro.sky.team2.bank_service.repository.RulesRepository;
+import pro.sky.team2.bank_service.repository.StatsRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class RuleService {
@@ -23,9 +27,12 @@ public class RuleService {
 
     private final RulesRepository ruleRepository;
 
-    public RuleService(RecommendationsRepository recommendationsRepository, RulesRepository ruleRepository, ArgumentsRepository argumentsRepository) {
+    private final StatsRepository statsRepository;
+
+    public RuleService(RecommendationsRepository recommendationsRepository, RulesRepository ruleRepository, ArgumentsRepository argumentsRepository, StatsRepository statsRepository) {
         this.recommendationsRepository = recommendationsRepository;
         this.ruleRepository = ruleRepository;
+        this.statsRepository = statsRepository;
     }
 
     public RecommendationListDTO getAll() {
@@ -61,7 +68,13 @@ public class RuleService {
         }
     }
 
-    private boolean checkQuery(Rule rule) throws NumberFormatException{
+    public Set<RecommendationStatsDTO> getStats() {
+        return statsRepository.findAll().stream()
+                .map(RecommendationMapper::mapToStatsDTO)
+                .collect(Collectors.toSet());
+    }
+
+    protected boolean checkQuery(Rule rule) throws NumberFormatException{
         try {
             String query = rule.getQuery();
             if (!List.of(ArgumentsRepository.QUERIES).contains(query)) {

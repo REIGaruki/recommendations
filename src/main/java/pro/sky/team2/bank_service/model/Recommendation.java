@@ -81,12 +81,12 @@ public class Recommendation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Recommendation that = (Recommendation) o;
-        return Objects.equals(name, that.name) && Objects.equals(text, that.text);
+        return Objects.equals(name, that.name) && Objects.equals(productId, that.productId) && Objects.equals(text, that.text);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, text);
+        return Objects.hash(name, productId, text);
     }
 
     @Override
@@ -94,6 +94,7 @@ public class Recommendation {
         return "Recommendation{" +
                 "name='" + name + '\'' +
                 ", id=" + id +
+                ", productId=" + productId +
                 ", text='" + text + '\'' +
                 ", rules=" + rules +
                 '}';

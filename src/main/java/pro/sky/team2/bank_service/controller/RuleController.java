@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.team2.bank_service.dto.RecommendationDTO;
 import pro.sky.team2.bank_service.dto.RecommendationListDTO;
+import pro.sky.team2.bank_service.dto.RecommendationStatsDTO;
 import pro.sky.team2.bank_service.service.RuleService;
 
 import java.util.*;
@@ -36,9 +37,14 @@ public class RuleController {
     }
 
     @DeleteMapping("/{recommendationId}")
-    public ResponseEntity deleteRecommendation(@PathVariable UUID recommendationId) {
+    public ResponseEntity<Object> deleteRecommendation(@PathVariable UUID recommendationId) {
         service.deleteRecommendation(recommendationId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/stats")
+    public Set<RecommendationStatsDTO> getStats() {
+        return service.getStats();
     }
 
 }
