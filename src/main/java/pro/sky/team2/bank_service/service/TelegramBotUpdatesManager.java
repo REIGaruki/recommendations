@@ -32,7 +32,7 @@ public class TelegramBotUpdatesManager {
 
     private SendMessage sendStartMessage(Message message) {
         String name = message.chat().firstName() + " " + message.chat().lastName();
-        String messageText = "Привет, " + name + "!\n" +
+        String messageText = "Здравствуйте, уважаемый " + name + "!\n" +
                 "Тут должна быть какая-то справка";
         return new SendMessage(message.chat().id(), messageText);
     }
