@@ -10,7 +10,6 @@ import pro.sky.team2.bank_service.repository.StatsRepository;
 import pro.sky.team2.bank_service.rulesets.RecommendationRuleSet;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class RecommendationService {

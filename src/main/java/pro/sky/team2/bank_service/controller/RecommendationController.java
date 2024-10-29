@@ -2,7 +2,6 @@ package pro.sky.team2.bank_service.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pro.sky.team2.bank_service.dto.RecommendationForUserDTO;
 import pro.sky.team2.bank_service.service.RecommendationService;
 
 import java.util.*;
