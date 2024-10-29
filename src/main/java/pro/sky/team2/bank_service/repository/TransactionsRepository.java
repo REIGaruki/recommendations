@@ -52,4 +52,13 @@ public class TransactionsRepository {
         ));
     }
 
+    public List<UUID> getUserIdByName(String firstName, String lastName) {
+        return jdbcTemplate.queryForList(
+                "SELECT id FROM users u WHERE u.first_name = ? AND u.last_name = ?",
+                UUID.class,
+                firstName,
+                lastName
+        );
+    }
+
 }
