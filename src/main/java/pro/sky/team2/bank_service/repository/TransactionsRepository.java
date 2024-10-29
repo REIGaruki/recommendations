@@ -64,26 +64,15 @@ public class TransactionsRepository {
 
     public List<String> getNamesById(UUID userId) {
         return jdbcTemplate.query("SELECT first_name, last_name FROM users u WHERE u.id = ?", (ResultSet rs) -> {
-                    System.out.println(rs);
-                    List<String> result = new ArrayList<>();
-                    result.add(rs.getString("first_name"));
-                    result.add(rs.getString("last_name"));
+            List<String> result = new ArrayList<>();
+            while (rs.next()) {
+                        result.add(rs.getString("first_name"));
+                        result.add(rs.getString("last_name"));
+                    }
                     return result;
                 },
                 userId
         );
-    }
-
-    public String getF(UUID userId) {
-        return jdbcTemplate.queryForObject("SELECT first_name FROM users u WHERE u.id = ?",
-        String.class,
-        userId);
-    }
-
-    public String getL(UUID userId) {
-        return jdbcTemplate.queryForObject("SELECT last_name FROM users u WHERE u.id = ?",
-                String.class,
-                userId);
     }
 
 }

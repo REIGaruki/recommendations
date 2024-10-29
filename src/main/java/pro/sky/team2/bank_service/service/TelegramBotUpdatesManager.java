@@ -2,13 +2,10 @@ package pro.sky.team2.bank_service.service;
 
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pro.sky.team2.bank_service.dto.RecommendationDTO;
 import pro.sky.team2.bank_service.dto.RecommendationForUserDTO;
 import pro.sky.team2.bank_service.repository.TransactionsRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -28,7 +25,7 @@ public class TelegramBotUpdatesManager {
     public SendMessage manageUpdateMessage(Message message) {
         if (message.text().equals("/start")) {
             return sendStartMessage(message);
-        } else if (message.text().startsWith("/recommend")) {
+        } else if (message.text().startsWith("/recommend ")) {
             return sendRecommendationMessage(message);
         } else {
             return sendNotAvailableMessage(message);
@@ -38,7 +35,7 @@ public class TelegramBotUpdatesManager {
     private SendMessage sendStartMessage(Message message) {
         String name = message.chat().firstName() + " " + message.chat().lastName();
         String messageText = "Здравствуйте, уважаемый " + name + "!\n" +
-                "Тут должна быть какая-то справка";
+                "Отправляйте команду\n/recommend {имя_пользователя}\nдля получения рекомендаций по нашим продуктам";
         return new SendMessage(message.chat().id(), messageText);
     }
 
@@ -54,22 +51,14 @@ public class TelegramBotUpdatesManager {
             messageText = "Пользователь не найден";
         } else {
             UUID userId = listOfCorrespondentUsers.get(0);
-            System.out.println(userId);
-           // List<String> names = transactionsRepository.getNamesById(userId);
-            List<String> names = new ArrayList<>();
-            names.add(transactionsRepository.getF(userId));
-            names.add(transactionsRepository.getL(userId));
+            List<String> names = transactionsRepository.getNamesById(userId);
             Set<RecommendationForUserDTO> recommendations = recommendationService.recommend(userId);
             StringBuilder newProducts = new StringBuilder();
             if (recommendations.isEmpty()) {
                 newProducts.append("Новых продуктов нет");
             } else {
                 for (RecommendationForUserDTO recommendation : recommendations) {
-                    newProducts.append("\n");
-                    newProducts.append(recommendation.getName());
-                    newProducts.append("\n");
-                    newProducts.append(recommendation.getText());
-                    newProducts.append("\n");
+                    newProducts.append(formatRecommendation(recommendation));
                 }
             }
             messageText = "Здравствуйте, " + names.get(0) +
@@ -77,5 +66,13 @@ public class TelegramBotUpdatesManager {
                     "\n\nНовые продукты для вас:\n" + newProducts;
         }
         return new SendMessage(message.chat().id(), messageText);
+    }
+
+    private String formatRecommendation(RecommendationForUserDTO recommendation) {
+        return "\n" +
+                recommendation.getName() +
+                "\n" +
+                recommendation.getText() +
+                "\n";
     }
 }
