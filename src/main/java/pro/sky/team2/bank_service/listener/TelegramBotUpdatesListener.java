@@ -41,7 +41,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener{
                 logger.info("Processing update succeeded");
             });
         } catch (Exception e) {
-            logger.error("Processing update failed: {}", e);
+            logger.error("Processing update failed: {?}", e);
         } finally {
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         }

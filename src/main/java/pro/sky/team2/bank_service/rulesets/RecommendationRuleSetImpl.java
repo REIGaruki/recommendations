@@ -23,7 +23,6 @@ public class RecommendationRuleSetImpl implements RecommendationRuleSet{
         this.transactionsRepository = transactionsRepository;
     }
 
-    @Cacheable(value = "check_rule",  key = "{#userId, #recommendation.id}")
     public boolean checkRuleMatching(Recommendation recommendation, UUID userId) {
         boolean result = true;
             List<Rule> rules = recommendation.getRules();
@@ -33,9 +32,9 @@ public class RecommendationRuleSetImpl implements RecommendationRuleSet{
         return result;
     }
 
-    @Cacheable(value = "check_rule",  key = "{#userId, #recommendation.id}")
+    @Cacheable(value = "check_rule",  key = "{#userId, #rule.id}")
     private boolean checkRule(Rule rule, UUID userId) {
-        if (cacheManager.getCache("check_rule").get("{#userId, #recommendation.id}") != null) {
+        if (cacheManager.getCache("check_rule").get("{#userId, #rule.id}") != null) {
             return Boolean.TRUE.equals(cacheManager.getCache("check_rule").get("{#userId, #recommendation.id}"));
         }
         boolean result;

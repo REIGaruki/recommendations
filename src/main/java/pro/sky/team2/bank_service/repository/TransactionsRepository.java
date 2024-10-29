@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,7 +30,7 @@ public class TransactionsRepository {
 
     public boolean checkTransactionSumCompare(UUID userId, List<String> arguments) {
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(
-                "SELECT CAST (CASE WHEN (SELECT SUM(amount) FROM transactions t JOIN products p ON t.product_id=p.id WHERE p.type = ? AND t.type = ? AND t.user_id = ?) " + arguments.get(2) +" ? THEN 1 ELSE 0 END AS BIT)",
+                "SELECT CAST (CASE WHEN (SELECT SUM(amount) FROM transactions t JOIN products p ON t.product_id=p.id WHERE p.type = ? AND t.type = ? AND t.user_id = ?) " + arguments.get(2) + " ? THEN 1 ELSE 0 END AS BIT)",
                 boolean.class,
                 arguments.get(0),
                 arguments.get(1),
@@ -52,13 +54,36 @@ public class TransactionsRepository {
         ));
     }
 
-    public List<UUID> getUserIdByName(String firstName, String lastName) {
+    public List<UUID> getUserIdByName(String userName) {
         return jdbcTemplate.queryForList(
-                "SELECT id FROM users u WHERE u.first_name = ? AND u.last_name = ?",
+                "SELECT id FROM users u WHERE u.username = ?",
                 UUID.class,
-                firstName,
-                lastName
+                userName
         );
+    }
+
+    public List<String> getNamesById(UUID userId) {
+        return jdbcTemplate.query("SELECT first_name, last_name FROM users u WHERE u.id = ?", (ResultSet rs) -> {
+                    System.out.println(rs);
+                    List<String> result = new ArrayList<>();
+                    result.add(rs.getString("first_name"));
+                    result.add(rs.getString("last_name"));
+                    return result;
+                },
+                userId
+        );
+    }
+
+    public String getF(UUID userId) {
+        return jdbcTemplate.queryForObject("SELECT first_name FROM users u WHERE u.id = ?",
+        String.class,
+        userId);
+    }
+
+    public String getL(UUID userId) {
+        return jdbcTemplate.queryForObject("SELECT last_name FROM users u WHERE u.id = ?",
+                String.class,
+                userId);
     }
 
 }
