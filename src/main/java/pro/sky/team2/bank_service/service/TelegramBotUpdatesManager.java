@@ -42,7 +42,7 @@ public class TelegramBotUpdatesManager {
     }
 
     private SendMessage sendRecommendationMessage(Message message) {
-        String messageText = "";
+        String messageText;
         String userName = message.chat().firstName() + " " +  message.chat().lastName();
         List<UUID> listOfCorrespondentUsers = transactionsRepository.getUserIdByName(message.chat().firstName(), message.chat().lastName());
         if (listOfCorrespondentUsers.size() != 1) {
