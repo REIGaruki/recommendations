@@ -54,24 +54,20 @@ public class TransactionsRepository {
         ));
     }
 
-    public List<UUID> getUserIdByName(String userName) {
-        return jdbcTemplate.queryForList(
-                "SELECT id FROM users u WHERE u.username = ?",
-                UUID.class,
-                userName
-        );
-    }
-
-    public List<String> getNamesById(UUID userId) {
-        return jdbcTemplate.query("SELECT first_name, last_name FROM users u WHERE u.id = ?", (ResultSet rs) -> {
-            List<String> result = new ArrayList<>();
-            while (rs.next()) {
-                        result.add(rs.getString("first_name"));
-                        result.add(rs.getString("last_name"));
+    public List<String> getUserInfoByName(String userName) {
+        return jdbcTemplate.query("SELECT id, first_name, last_name FROM users u WHERE u.username = ?", (ResultSet rs) -> {
+                    List<String> result = new ArrayList<>();
+                    rs.next();
+                    result.add(rs.getString("id"));
+                    result.add(rs.getString("first_name"));
+                    result.add(rs.getString("last_name"));
+                    if (rs.next()) {
+                        return new ArrayList<>();
+                    } else {
+                        return result;
                     }
-                    return result;
                 },
-                userId
+                userName
         );
     }
 

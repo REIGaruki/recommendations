@@ -46,12 +46,11 @@ public class TelegramBotUpdatesManager {
     private SendMessage sendRecommendationMessage(Message message) {
         String messageText;
         String userName = message.text().substring("/recommend ".length());
-        List<UUID> listOfCorrespondentUsers = transactionsRepository.getUserIdByName(userName);
-        if (listOfCorrespondentUsers.size() != 1) {
+        List<String> listOfUserInfo = transactionsRepository.getUserInfoByName(userName);
+        if (listOfUserInfo.size() != 3) {
             messageText = "Пользователь не найден";
         } else {
-            UUID userId = listOfCorrespondentUsers.get(0);
-            List<String> names = transactionsRepository.getNamesById(userId);
+            UUID userId = UUID.fromString(listOfUserInfo.get(0));
             Set<RecommendationForUserDTO> recommendations = recommendationService.recommend(userId);
             StringBuilder newProducts = new StringBuilder();
             if (recommendations.isEmpty()) {
@@ -61,8 +60,8 @@ public class TelegramBotUpdatesManager {
                     newProducts.append(formatRecommendation(recommendation));
                 }
             }
-            messageText = "Здравствуйте, " + names.get(0) +
-                    " " + names.get(1) +
+            messageText = "Здравствуйте, " + listOfUserInfo.get(1) +
+                    " " + listOfUserInfo.get(2) +
                     "\n\nНовые продукты для вас:\n" + newProducts;
         }
         return new SendMessage(message.chat().id(), messageText);

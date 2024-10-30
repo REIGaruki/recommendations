@@ -34,14 +34,14 @@ public class TelegramBotUpdatesListener implements UpdatesListener{
     public int process(List<Update> updates) {
         try {
             updates.forEach(update -> {
-                logger.info("Processing update succeeded");
+                logger.info("Processing update {} started", update.updateId());
                 Message message = update.message();
                 SendMessage sendMessage = telegramBotUpdatesManager.manageUpdateMessage(message);
                 telegramBot.execute(sendMessage);
                 logger.info("Processing update succeeded");
             });
         } catch (Exception e) {
-            logger.error("Processing update failed: {?}", e);
+            logger.error("Processing update failed: {}", e);
         } finally {
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         }
