@@ -13,6 +13,4 @@ public class ArgumentsRepository {
 
     public static final String[] RELATION_OPERATORS = new String[] {">", "<", ">=", "<=", "=="};
 
-
-
 }
