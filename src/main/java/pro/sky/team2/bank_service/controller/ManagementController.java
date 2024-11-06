@@ -23,7 +23,9 @@ public class ManagementController {
 
     @PostMapping("/clear-caches")
     public void clearCache() {
+        System.out.println(cacheManager.getCacheNames());
         cacheManager.getCacheNames().forEach(name -> Objects.requireNonNull(cacheManager.getCache(name)).clear());
+        System.out.println(cacheManager.getCacheNames());
     }
 
     @GetMapping("/info")

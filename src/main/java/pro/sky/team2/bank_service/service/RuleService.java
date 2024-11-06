@@ -10,6 +10,7 @@ import pro.sky.team2.bank_service.exception.WrongArgumentException;
 import pro.sky.team2.bank_service.mapper.RecommendationListMapper;
 import pro.sky.team2.bank_service.mapper.RecommendationMapper;
 import pro.sky.team2.bank_service.model.Recommendation;
+import pro.sky.team2.bank_service.model.RecommendationStat;
 import pro.sky.team2.bank_service.model.Rule;
 import pro.sky.team2.bank_service.querysets.QuerySet;
 import pro.sky.team2.bank_service.repository.*;
@@ -58,6 +59,10 @@ public class RuleService {
         }
         if (allIsOk) {
             recommendation = recommendationsRepository.save(recommendation);
+            System.out.println(recommendation);
+            RecommendationStat stat = new RecommendationStat();
+            stat.setRecommendation(recommendation);
+            statsRepository.save(stat);
             for (Rule rule : rules) {
                 rule.setRecommendation(recommendation);
                 ruleRepository.save(rule);

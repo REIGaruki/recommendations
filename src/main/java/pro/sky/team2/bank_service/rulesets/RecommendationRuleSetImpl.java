@@ -27,7 +27,7 @@ public class RecommendationRuleSetImpl implements RecommendationRuleSet{
         this.querySets = querySets;
     }
 
-    @Cacheable(value = "check_rule",  key = "{#userId, #rule.id}")
+    @Cacheable(value = "check_rule",  key = "{#userId, #recommendation.id}")
     public boolean checkRuleMatching(Recommendation recommendation, UUID userId) {
         boolean result = true;
             for (Rule rule : recommendation.getRules()) {

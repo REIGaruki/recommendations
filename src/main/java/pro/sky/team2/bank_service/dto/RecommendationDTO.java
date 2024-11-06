@@ -1,6 +1,7 @@
 package pro.sky.team2.bank_service.dto;
 
 import com.fasterxml.jackson.annotation.*;
+import org.hibernate.annotations.UuidGenerator;
 import pro.sky.team2.bank_service.model.Rule;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.UUID;
 public class RecommendationDTO {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @UuidGenerator
     private UUID id;
 
     @JsonProperty("product_name")
